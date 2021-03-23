@@ -1,11 +1,20 @@
 from sklearn.metrics import roc_auc_score,precision_score,recall_score,accuracy_score
 import numpy as np
 
-def precision(y_true,y_pred):
-    return precision_score(y_true,y_pred)
+def precision(y_true, y_pred):
+    return precision_score(y_true, y_pred)
+
+def precision4Set( test_pos_set, test_neg_set, pred_set ):
+    TP = len(pred_set & test_pos_set)
+    FP = len(pred_set & test_neg_set)
+    p = TP / (TP + FP) if TP + FP > 0 else None
+    return p
 
 def recall(y_true,y_pred):
     return recall_score(y_true,y_pred)
+
+def recall4Set(test_set, pred_set):
+    return len(pred_set & test_set)/(len(test_set))
 
 def auc(y_true,y_scores):
     return roc_auc_score(y_true,y_scores)
@@ -16,19 +25,19 @@ def accuracy(y_true,y_scores):
 class TopK_evaluate():
 
     @staticmethod
-    def precisionAndRecall(pred,t_pos,t_neg):
-        TP=len(set(pred)&set(t_pos))
-        FP=len(set(pred)&set(t_neg))
-        all_pos=len(pred)
-        all_recall=len(t_pos)
-        p=TP/(TP+FP) if TP+FP>0 else None
-        p_full=TP/all_pos
-        r=TP/all_recall if all_recall>0 else None
-        return p,p_full,r
+    def precisionAndRecall(pred, t_pos, t_neg):
+        TP = len(set(pred)&set(t_pos))
+        FP = len(set(pred)&set(t_neg))
+        all_pos = len(pred)
+        all_recall = len(t_pos)
+        p = TP/(TP+FP) if TP+FP > 0 else None
+        p_full = TP/all_pos
+        r = TP/all_recall if all_recall > 0 else None
+        return p, p_full, r
 
 
     @staticmethod
-    def hit_rate_for_item(t_items,p_items):
+    def hit_rate_for_item(t_items, p_items):
         return len((set(p_items)&set(t_items)))/len(t_items)
 
     @staticmethod
@@ -62,7 +71,7 @@ class TopK_evaluate():
 
     @staticmethod
     def RR(t_items, p_items):
-        "Reciprocal Rank"
+        #"Reciprocal Rank"
         for n in range(len(p_items)):
             if p_items[n] in t_items:
                 return 1/n+1

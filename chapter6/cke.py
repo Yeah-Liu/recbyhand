@@ -40,14 +40,14 @@ class CKE(nn.Block):
         y=nd.sigmoid(nd.sum(u*i,axis=1))
         return y
 
-    def net(self,X):
+    def net( self, X ):
         x_rec,x_correct,x_corrupt=X
         y_ture = nd.array(x_rec[:, 2], dtype=np.float32)
-        y_pred=self.rec_predict(x_rec)
-        a=self.BCEloss(y_pred, y_ture)
+        y_pred = self.rec_predict(x_rec)
+        a = self.BCEloss(y_pred, y_ture)
         rec_loss = sum(a)
-        y_correct=self.kg_predict(x_correct)
-        y_corrupt=self.kg_predict(x_corrupt)
+        y_correct = self.kg_predict(x_correct)
+        y_corrupt = self.kg_predict(x_corrupt)
         kg_loss = sum(self.__hinge_loss(y_correct,y_corrupt))
         return rec_loss+kg_loss
 
