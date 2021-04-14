@@ -15,7 +15,7 @@ class GAT( nn.Module ):
                  activation, #激活函数
                  in_drop, #输入特征的Dropout比例
                  at_drop, #注意力特征的Dropout比例
-                 negative_slope, #注意力计算中Leaky ReLU的a值
+                 negative_slope #注意力计算中Leaky ReLU的a值
                  ):
         super( GAT, self ).__init__( )
         self.g = g
@@ -66,8 +66,10 @@ def train( n_epochs = 100,
            feat_drop = 0.6,
            attn_drop = 0.6,
            negative_slope = 0.2):
+
     data = CoraGraphDataset()
-    g=data[0]
+
+    g = data[0]
     features = g.ndata['feat']
     labels = g.ndata['label']
     train_mask = g.ndata['train_mask']
@@ -76,6 +78,7 @@ def train( n_epochs = 100,
     in_feats = features.shape[1]
     n_classes = data.num_labels
     heads = ([n_heads] * n_layers) + [n_out_heads]
+
     model = GAT( g,
                  n_layers,
                  in_feats,

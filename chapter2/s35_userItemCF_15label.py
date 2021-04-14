@@ -11,8 +11,8 @@ def getDict(triples):
     user_items = collections.defaultdict(dict)
     item_users = collections.defaultdict(dict)
     for u, i, r in triples:
-        user_items[u][i]=r
-        item_users[i][u]=r
+        user_items[u][i] = float(r)
+        item_users[i][u] = float(r)
     return user_items, item_users
 
 #集合形式读取数据, 评分大于4的为正例，反之为反例。返回{uid1:{iid1,iid2,iid3}}
@@ -26,12 +26,19 @@ def getPosAndNegSet(triples):
             user_neg_items[u].add(i)
     return user_pos_items, user_neg_items
 
-# 根据评分字典得到numpy数列
-def dict2array(d1, d2):
+# 根据评分字典得到cos相似度
+def getCosSimForDict(d1, d2):
+    '''
+    :param d1: 字典{iid1:rate, iid2:rate}
+    :param d2: 字典{iid2:rate, iid3:rate}
+    :return: 得到cos相似度
+    '''
     s1 = set(d1.keys())
     s2 = set(d2.keys())
-    a1, a2 = [],[]
     inner = s1 & s2
+    if len( inner ) == 0:
+        return 0 #如果没有交集，则相似度一定为0
+    a1, a2 = [],[]
     for i in inner:
         a1.append(d1[i])
         a2.append(d2[i])
@@ -41,7 +48,7 @@ def dict2array(d1, d2):
     for i in s2 - inner:
         a1.append(0)
         a2.append(d2[i])
-    return np.array(a1),np.array(a2)
+    return b_sim.cos4vector( np.array(a1), np.array(a2) )
 
 #knn算法
 def knn4Dict( trainset, k ):
@@ -49,10 +56,11 @@ def knn4Dict( trainset, k ):
     for e1 in tqdm( trainset ):
         ulist=[]
         for e2 in trainset:
-            if e1 == e2: continue
-            v1,v2 = dict2array(trainset[e1], trainset[e2])
-            cosSim = b_sim.cos4vector( v1,v2 )
-            ulist.append((e2, cosSim))
+            if e1 == e2 :
+                continue
+            cosSim = getCosSimForDict( trainset[e1], trainset[e2] )
+            if cosSim !=0:
+                ulist.append((e2, cosSim))
         sims[e1] = [i[0] for i in sorted( ulist, key = lambda x:x[1], reverse = True)[:k]]
     return sims
 
@@ -119,7 +127,7 @@ if __name__ == '__main__':
 
     '''
     user_CF
-    Precision 0.7121 | Recall 0.6831
+    Precision 0.7131 | Recall 0.6967
     item_CF
-    Precision 0.6871 | Recall 0.6379
+    Precision 0.6917 | Recall 0.6229
     '''
