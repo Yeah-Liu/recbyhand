@@ -35,6 +35,8 @@ class FM( nn.Module ):
         return all
 
     def forward(self, u, i, user_df, item_df):
+
+
         #得到用户与物品组合起来后的特征索引
         all_feature_index = self.__getAllFeatures( u, i, user_df, item_df )
         #取出特征向量

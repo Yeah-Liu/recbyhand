@@ -61,6 +61,22 @@ class TopK_evaluate():
         r = TP/all_recall if all_recall > 0 else None
         return p, p_full, r
 
+    # 覆盖率
+    @staticmethod
+    def coverage(all_pred, all_items):
+        a = set()
+        for pred in all_pred:
+            a |= set(pred)
+        return len(a) / len(all_items)
+
+    #多样性
+    @staticmethod
+    def diversity(all_pred):
+        a=set()
+        for pred in all_pred:
+            a|=set(pred)
+        return len(a)/(len(all_pred)*len(all_pred[0]))
+
 
     @staticmethod
     def hit_rate_for_item(t_items, p_items):

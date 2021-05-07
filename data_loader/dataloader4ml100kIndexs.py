@@ -62,9 +62,10 @@ def __get_year_index(begin):
                 years.add(int(year[2]))
     years.add(0)
     years = sorted(years)
+    print(years)
     return {k:v+begin for v,k in enumerate(years)},len(years)
 
-def generate_item_df(begin):
+def generate_item_df(begin,out):
     items = {}
     years_dict, begin = __get_year_index(begin)
     max_n_neibour = 0
@@ -95,7 +96,7 @@ def generate_item_df(begin):
         n_all.append( np.random.choice( item, size = max_n_neibour, replace = True ) )
 
     df = pd.DataFrame( n_all, index = iids )
-    df.to_csv( fp.Ml_100K.ITEM_DF )
+    df.to_csv(out )
 
     #print( all_items, max_n_neibour )
     return items
@@ -112,6 +113,13 @@ def __read_rating_data(path):
             triples.append([int(d[0]),int(d[1]),get1or0(int(d[2]))])
     return triples
 
+def read_data_user_item_df():
+    user_df = pd.read_csv( fp.Ml_100K.USER_DF, index_col = 0 )
+    item_df = pd.read_csv( fp.Ml_100K.ITEM_DF, index_col = 0 )
+    train_triples = __read_rating_data(train_path)
+    test_triples= __read_rating_data(test_path)
+    return train_triples, test_triples, user_df, item_df, max(user_df.max())+1, max(item_df.max())+1
+
 
 def read_data():
     user_df = pd.read_csv( fp.Ml_100K.USER_DF, index_col = 0 )
@@ -122,8 +130,8 @@ def read_data():
 
 
 if __name__ == '__main__':
-    begin = generate_user_df()
-    generate_item_df(begin)
-
+    #begin = generate_user_df()
+    #generate_item_df(begin,fp.Ml_100K.ITEM_DF )
+    generate_item_df(0, fp.Ml_100K.ITEM_DF_0)
     read_data()
     #print(uers)

@@ -1,4 +1,4 @@
-
+import json
 
 def readTriple(path,sep=None):
     with open(path,'r',encoding='utf-8') as f:
@@ -19,3 +19,12 @@ def readFile(path,sep=None):
                 lines = line.strip().split()
             if len(lines)==0:continue
             yield lines
+
+def getJson(path):
+    with open(path,'r',encoding='utf-8') as f:
+        d=json.load(f)
+    return d
+
+def dumpJson(obj,path):
+    with open(path,'w+',encoding='utf-8') as f:
+        json.dump(obj,f)
