@@ -115,7 +115,7 @@ def __read_rating_data(path):
 
 def read_data_user_item_df():
     user_df = pd.read_csv( fp.Ml_100K.USER_DF, index_col = 0 )
-    item_df = pd.read_csv( fp.Ml_100K.ITEM_DF, index_col = 0 )
+    item_df = pd.read_csv( fp.Ml_100K.ITEM_DF_0, index_col = 0 )
     train_triples = __read_rating_data(train_path)
     test_triples= __read_rating_data(test_path)
     return train_triples, test_triples, user_df, item_df, max(user_df.max())+1, max(item_df.max())+1

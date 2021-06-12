@@ -50,6 +50,8 @@ class Ml_latest_small():
     RATING_TS = os.path.join(__BASE,'rating_index_ts.tsv')
     SEQS = os.path.join(__BASE, 'seqs.npy')
 
+    SEQS_NEG = os.path.join(__BASE, 'seqsWithNeg.npy')
+
 
 
 

@@ -88,7 +88,7 @@ def doEva(net,test_triple):
     d = torch.LongTensor(test_triple)
     x = d[:, :-1]
     item = d[:, -2]
-    y = torch.FloatTensor(d[:, -1].detach().numpy())
+    y = d[:, -1].float()
 
     with torch.no_grad():
         out = net.predict(x, item)
@@ -130,3 +130,5 @@ def train( epochs = 10, batchSize = 1024, lr = 0.001, dim = 128, eva_per_epochs 
 
 if __name__ == '__main__':
     train()
+
+
